@@ -1,17 +1,12 @@
 import { authenticate } from "./api/auth";
-import { getAllAccounts } from "./api/accounts";
-import { getAccountTransactions } from "./api/accounts/transactions";
+import { fetchAndTransform } from "./api/accounts";
 
 async function main() {
   const token = await authenticate();
 
-  const accounts = await getAllAccounts(token);
-  console.log("accounts", accounts);
+  const output = await fetchAndTransform(token);
 
-  for (const account of accounts.account) {
-    const transactions = await getAccountTransactions(account.acc_number, token);
-    console.log("transactions", transactions);
-  }
+  console.log(output);
 }
 
 main().catch(console.error);

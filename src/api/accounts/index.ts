@@ -1,44 +1,34 @@
-import fetch from "../../node-fetch";
+import { Account } from "src/core/account";
+import { AccountsResponse, getAllAccounts } from "./accounts";
+import { getAccountTransactions, TransactionsResponse } from "./transactions";
 
-const API_URL = `${process.env["API_URL"]}/accounts`;
+export async function fetchAndTransform(accessToken: string): Promise<Account[]> {
+  const accounts = await getAllAccounts(accessToken);
+  const transactions = await Promise.all(
+    accounts.account.map((account) => getAccountTransactions(account.acc_number, accessToken))
+  );
 
-export async function getAllAccounts(accessToken: string) {
-  const response = await fetch(API_URL, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-
-  if (response.status !== 200) {
-    console.error(await response.text());
-    throw new Error(`Response error: ${response.statusText}`);
-  }
-
-  const data = await response.json();
-  return parseAccountsResponse(data);
+  return transform(accounts, transactions);
 }
 
-interface AccountsResponse {
-  account: {
-    acc_number: string;
-    amount: string; // TODO conversion to number
-    currency: "EUR";
-  }[];
+const transform = (accounts: AccountsResponse, transactions: TransactionsResponse[]): Account[] => {
+  return accounts.account.map((account, index) =>
+    mergeTransactionsOnAccount(account, transactions[index].transactions)
+  );
+};
 
-  link: unknown;
-}
-
-const parseAccountsResponse = (response: unknown): AccountsResponse => {
-  if (typeof response !== "object" || response === null) {
-    throw new Error("Invalid response");
-  }
-  const { account, link } = response as AccountsResponse;
-  // TODO deep parsing
-  if (!Array.isArray(account)) {
-    throw new Error("Invalid response");
-  }
-  // TODO do not ignore link property
-  return { account, link };
+const mergeTransactionsOnAccount = (
+  account: AccountsResponse["account"][number],
+  transactions: TransactionsResponse["transactions"]
+): Account => {
+  return {
+    acc_number: account.acc_number,
+    amount: Number(account.amount),
+    transactions: transactions.map((transaction) => ({
+      label: transaction.label,
+      // TODO extract as a unit
+      amount: transaction.sign === "CDT" ? Number(transaction.amount) : -Number(transaction.amount),
+      currency: transaction.currency,
+    })),
+  };
 };

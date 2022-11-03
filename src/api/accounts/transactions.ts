@@ -2,7 +2,10 @@ import fetch from "../../node-fetch";
 
 const apiURL = (accountNumber: string) => `${process.env["API_URL"]}/accounts/${accountNumber}/transactions`;
 
-export async function getAccountTransactions(accountNumber: string, accessToken: string) {
+export async function getAccountTransactions(
+  accountNumber: string,
+  accessToken: string
+): Promise<TransactionsResponse> {
   const response = await fetch(apiURL(accountNumber), {
     method: "GET",
     headers: {
@@ -20,10 +23,10 @@ export async function getAccountTransactions(accountNumber: string, accessToken:
   return parseTransactionsResponse(data);
 }
 
-interface TransactionsResponse {
+export interface TransactionsResponse {
   transactions: {
     id: string;
-    label: number;
+    label: string;
     sign: "DBT" | "CDT";
     amount: string; // TODO conversion to number
     currency: "EUR";

@@ -12,11 +12,7 @@ const getCredential = () => {
 
 export async function authenticate() {
   const credentials = getCredential();
-  console.log("credentials", credentials);
   const refreshToken = await login(credentials);
-  console.log("refreshToken", refreshToken);
   const accessToken = await getAccesToken(refreshToken);
-  console.log("accessToken", accessToken);
-
   return accessToken;
 }
