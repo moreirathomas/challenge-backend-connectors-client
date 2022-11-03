@@ -1,7 +1,23 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["es2015", "dom"]
+    "target": "es2020",
+    "lib": ["es2020"],
+    "types": ["node", "jest"],
+    "module": "CommonJS",
+    "rootDir": "./src",
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "outDir": "./dist",
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowUnreachableCode": false,
+    "skipLibCheck": true,
+    "allowJs": false
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src"],
+  "exclude": ["node_modules", "**/*.test.ts"]
 }

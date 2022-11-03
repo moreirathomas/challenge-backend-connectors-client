@@ -2,9 +2,11 @@
   "name": "js-kata-starter",
   "version": "1.0.0",
   "description": "Starter project for kata (Node, TypeScript, Jest)",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "dev": "ts-node -r dotenv/config src/index.ts dotenv_config_path=.env.dev",
+    "dev": "node -r dotenv/config dist/index.js dotenv_config_path=.env.dev",
+    "predev": "npm run build",
+    "build": "tsc",
     "test": "jest --watch --coverage",
     "format": "prettier --write \"src/**/*.ts\""
   },
@@ -18,7 +20,6 @@
     "jest-extended": "^3.1.0",
     "prettier": "^2.7.1",
     "ts-jest": "^29.0.1",
-    "ts-node": "^10.9.1",
     "typescript": "^4.8.3"
   },
   "prettier": {
