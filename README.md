@@ -1,9 +1,17 @@
-# js-kata-starter
+# Bridge tech test
 
-Starter project for kata (Node, TypeScript, Jest)
+## Installation
 
-## Getting started
+Requires node >=v16.
 
-- **Fork**, then clone the repository
-- Install dependencies
-- Start developing (`npm test`)
+```bash
+npm install
+```
+
+## Run
+
+```
+npm run dev
+```
+
+Which will retrieve all user's accounts and transactions and print them to the console.
